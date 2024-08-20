@@ -2,7 +2,7 @@
   {
       "model": "takeoffapi.trip",
       "fields": {
-        "user_id": "1",
+        "user_id": 1,
         "trip_name": "London",
         "origin": "BNA",
         "destination": "LHR",
@@ -13,7 +13,7 @@
   {
     "model": "takeoffapi.trip",
     "fields": {
-      "user_id": "1",
+      "user_id": 1,
       "trip_name": "Ushuaia",
       "origin": "BNA",
       "destination": "USH",
