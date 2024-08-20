@@ -2,7 +2,7 @@ from django.db import models
 from .trip import Trip
 
 class BoardingPass(models.Model):
-  trip_id = models.ForeignKey(Trip, on_delete=models.CASCADE)
+  trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
   departing_from = models.CharField(max_length=50)
   arriving_to = models.CharField(max_length=50)
   airline = models.CharField(max_length=50)
