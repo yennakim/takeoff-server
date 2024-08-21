@@ -1,0 +1,23 @@
+[
+  {
+      "model": "takeoffapi.triptraveler",
+      "fields": {
+        "trip_id": 1,
+        "traveler_id": 1
+      }
+  },
+  {
+    "model": "takeoffapi.triptraveler",
+    "fields": {
+        "trip_id": 2,
+        "traveler_id": 1
+      }
+  },
+  {
+    "model": "takeoffapi.triptraveler",
+    "fields": {
+        "trip_id": 2,
+        "traveler_id": 2
+      }
+  }
+]
