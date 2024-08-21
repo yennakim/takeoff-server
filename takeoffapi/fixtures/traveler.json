@@ -1,0 +1,18 @@
+[
+  {
+      "model": "takeoffapi.traveler",
+      "fields": {
+        "first_name": "Daun",
+        "last_name": "Kim",
+        "image": "https://loremflickr.com/320/240/otter"
+      }
+  },
+  {
+    "model": "takeoffapi.traveler",
+    "fields": {
+      "first_name": "Kelly",
+      "last_name": "Cardenas",
+      "image": "https://loremflickr.com/320/240/cat"
+    }
+}
+]

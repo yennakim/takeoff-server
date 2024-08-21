@@ -1,0 +1,20 @@
+[
+  {
+      "model": "takeoffapi.lodging",
+      "fields": {
+        "trip_id": 1,
+        "address": "48 Leicester Square",
+        "city": "London",
+        "length_of_stay": 6
+      }
+  },
+  {
+    "model": "takeoffapi.lodging",
+    "fields": {
+      "trip_id": 2,
+     "address": "Luis Fernando Martial 1650",
+      "city": "Ushuaia",
+      "length_of_stay": 3
+    }
+}
+]

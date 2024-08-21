@@ -1,0 +1,22 @@
+[
+  {
+      "model": "takeoffapi.user",
+      "fields": {
+        "first_name": "Daun",
+        "last_name": "Kim",
+        "image": "https://loremflickr.com/320/240/portrait",
+        "email": "yennakim11@gmail.com",
+        "uid": "UJPN6rb2DKgniDhwFf9kpWlomR32"
+      }
+  },
+  {
+      "model": "takeoffapi.user",
+      "fields": {
+        "first_name": "Whiskers",
+        "last_name": "LeCat",
+        "image": "https://loremflickr.com/320/240/cat",
+        "email": "whiskers@cats.com",
+        "uid": "1"
+      }
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+      "model": "takeoffapi.packeditem",
+      "fields": {
+        "trip_id": 1,
+        "item_name": "Shirt",
+        "quantity": 8
+      }
+  },
+  {
+    "model": "takeoffapi.packeditem",
+    "fields": {
+      "trip_id": 1,
+      "item_name": "Toothbrush",
+      "quantity": 1
+    }
+},
+{
+  "model": "takeoffapi.packeditem",
+  "fields": {
+    "trip_id": 1,
+    "item_name": "Passport",
+    "quantity": 1
+  }
+}
+]
