@@ -37,4 +37,17 @@ class TripView(ViewSet):
     )
     serializer = TripSerializer(trip)
     return Response(serializer.data)
+   
+  def update(self, request, pk):
+    trip = Trip.objects.get(pk=pk)
+    user = User.objects.get(id=request.data["user_id"])
     
+    trip.user = user
+    trip.trip_name = request.data["trip_name"]
+    trip.origin = request.data["origin"]
+    trip.destination = request.data["destination"]
+    trip.start_date = request.data["start_date"]
+    trip.end_date = request.data["end_date"]
+    trip.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
