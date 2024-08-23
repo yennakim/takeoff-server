@@ -46,4 +46,7 @@ class LodgingView(ViewSet):
     
     return Response(None, status=status.HTTP_204_NO_CONTENT)
     
-    
+  def delete(self, request, pk):
+    lodging = Lodging.objects.get(pk=pk)
+    lodging.delete()
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
