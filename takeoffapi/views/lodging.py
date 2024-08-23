@@ -34,3 +34,16 @@ class LodgingView(ViewSet):
     )
     serializer = LodgingSerializer(lodging)
     return Response(serializer.data)
+
+  def update(self, request, pk):
+    lodging = Lodging.objects.get(pk=pk)
+    trip = Trip.objects.get(pk=request.data["trip_id"])
+    lodging.trip = trip
+    lodging.address = request.data["address"]
+    lodging.city = request.data["city"]
+    lodging.length_of_stay = request.data["length_of_stay"]
+    lodging.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+    
