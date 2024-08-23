@@ -34,3 +34,14 @@ class UserView(ViewSet):
     )
     serializer = UserSerializer(user)
     return Response(serializer.data)
+  
+  def update(self, request, pk):
+    user = User.objects.get(pk=pk)
+    user.first_name = request.data["first_name"]
+    user.last_name = request.data["last_name"]
+    user.image = request.data["image"]
+    user.email = request.data["email"]
+    user.uid = request.data["uid"]
+    user.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
