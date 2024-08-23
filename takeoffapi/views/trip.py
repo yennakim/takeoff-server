@@ -51,3 +51,8 @@ class TripView(ViewSet):
     trip.save()
     
     return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+  def delete(self, request, pk):
+    trip = Trip.objects.get(pk=pk)
+    trip.delete()
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
