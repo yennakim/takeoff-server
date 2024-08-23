@@ -23,3 +23,14 @@ class UserView(ViewSet):
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
+
+  def create(self, request):
+    user = User.objects.create(
+      first_name = request.data["first_name"],
+      last_name = request.data["last_name"],
+      image = request.data["image"],
+      email = request.data["email"],
+      uid = request.data["uid"],
+    )
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
