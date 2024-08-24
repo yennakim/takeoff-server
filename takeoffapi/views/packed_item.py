@@ -44,3 +44,8 @@ class PackedItemView(ViewSet):
     packed_item.save()
     
     return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+  def delete(self, request, pk):
+    packed_item = PackedItem.objects.get(pk=pk)
+    packed_item.delete()
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
