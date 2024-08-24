@@ -2,7 +2,7 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from takeoffapi.models import PackedItem
+from takeoffapi.models import PackedItem, Trip
 
 class ItemSerializer(serializers.ModelSerializer):
   class Meta:
@@ -22,4 +22,15 @@ class PackedItemView(ViewSet):
   def list(self, request):
     items = PackedItem.objects.all()
     serializer = ItemSerializer(items, many=True)
+    return Response(serializer.data)
+
+  def create(self, request):
+    trip = Trip.objects.get(pk=request.data["trip_id"])
+    
+    packed_item = PackedItem.objects.create(
+      trip = trip,
+      item_name = request.data["item_name"],
+      quantity = request.data["quantity"],
+    )
+    serializer = ItemSerializer(packed_item)
     return Response(serializer.data)
