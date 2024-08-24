@@ -40,3 +40,19 @@ class BoardingPassView(ViewSet):
     )
     serializer = BoardingPassSerializer(boarding_pass)
     return Response(serializer.data)
+
+  def update(self, request, pk):
+    boarding_pass = BoardingPass.objects.get(pk=pk)
+    trip = Trip.objects.get(pk=request.data["trip_id"])
+    boarding_pass.trip = trip
+    boarding_pass.departing_from = request.data["departing_from"]
+    boarding_pass.arriving_to = request.data["arriving_to"]
+    boarding_pass.airline = request.data["airline"]
+    boarding_pass.gate = request.data["gate"]
+    boarding_pass.seat = request.data["seat"]
+    boarding_pass.departure_time = request.data["departure_time"]
+    boarding_pass.arrival_time = request.data["arrival_time"]
+    boarding_pass.flight_number = request.data["flight_number"]
+    boarding_pass.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
