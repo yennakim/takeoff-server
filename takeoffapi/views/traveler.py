@@ -32,3 +32,12 @@ class TravelerView(ViewSet):
     )
     serializer = TravelerSerializer(traveler)
     return Response(serializer.data)
+
+  def update(self, request, pk):
+    traveler = Traveler.objects.get(pk=pk)
+    traveler.first_name = request.data["first_name"]
+    traveler.last_name = request.data["last_name"]
+    traveler.image = request.data["image"]
+    traveler.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
