@@ -23,3 +23,12 @@ class TravelerView(ViewSet):
     travelers = Traveler.objects.all()
     serializer = TravelerSerializer(travelers, many=True)
     return Response(serializer.data)
+
+  def create(self, request):
+    traveler = Traveler.objects.create(
+      first_name = request.data["first_name"],
+      last_name = request.data["last_name"],
+      image = request.data["image"],
+    )
+    serializer = TravelerSerializer(traveler)
+    return Response(serializer.data)
