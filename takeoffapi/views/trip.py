@@ -2,7 +2,8 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from takeoffapi.models import Trip, User
+from rest_framework.decorators import action
+from takeoffapi.models import Trip, User, Traveler, TripTraveler
 
 class TripSerializer(serializers.ModelSerializer):
   class Meta:
@@ -56,3 +57,14 @@ class TripView(ViewSet):
     trip = Trip.objects.get(pk=pk)
     trip.delete()
     return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+  @action(methods=['post'], detail=True)
+  def add_traveler(self, request, pk):
+    trip = Trip.objects.get(pk=pk)
+    traveler = Traveler.objects.get(pk=pk)
+    trip_traveler = TripTraveler.objects.create(
+      trip = trip,
+      traveler = traveler
+    )
+    
+    return Response({'message': 'Traveler added to trip'}, status=status.HTTP_201_CREATED)
