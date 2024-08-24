@@ -34,3 +34,13 @@ class PackedItemView(ViewSet):
     )
     serializer = ItemSerializer(packed_item)
     return Response(serializer.data)
+
+  def update(self, request, pk):
+    packed_item = PackedItem.objects.get(pk=pk)
+    trip = Trip.objects.get(pk=request.data["trip_id"])
+    packed_item.trip = trip
+    packed_item.item_name = request.data["item_name"]
+    packed_item.quantity = request.data["quantity"]
+    packed_item.save()
+    
+    return Response(None, status=status.HTTP_204_NO_CONTENT)
