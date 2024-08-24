@@ -41,3 +41,8 @@ class TravelerView(ViewSet):
     traveler.save()
     
     return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+  def delete(self, request, pk):
+    traveler = Traveler.objects.get(pk=pk)
+    traveler.delete()
+    return Response(None, status = status.HTTP_204_NO_CONTENT)
