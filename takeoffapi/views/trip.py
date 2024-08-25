@@ -9,7 +9,7 @@ class TripSerializer(serializers.ModelSerializer):
   class Meta:
     model = Trip
     fields = ('id', 'user_id', 'trip_name', 'origin', 'destination', 'start_date', 'end_date')
-    depth = 1
+    depth = 2
 
 class TripView(ViewSet):
   def retrieve(self, request, pk=None):
@@ -68,3 +68,12 @@ class TripView(ViewSet):
     )
     
     return Response({'message': 'Traveler added to trip'}, status=status.HTTP_201_CREATED)
+
+  @action(methods=['delete'], detail=True)
+  def remove_traveler(self, request, pk):
+    trip = Trip.objects.get(pk=pk)
+    traveler = Traveler.objects.get(pk=pk)
+    trip_traveler = TripTraveler.objects.filter(trip_id = trip.id, traveler_id = traveler.id)
+    trip_traveler.delete()
+    
+    return Response({'message': 'Traveler removed'}, status=status.HTTP_204_NO_CONTENT)
