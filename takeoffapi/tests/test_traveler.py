@@ -4,6 +4,7 @@ from rest_framework.authtoken.models import Token
 from takeoffapi.models import Traveler
 from takeoffapi.views.traveler import TravelerSerializer
 
+
 class TravelerTests(APITestCase):
 
     fixtures = ['traveler']
@@ -29,9 +30,9 @@ class TravelerTests(APITestCase):
 
         self.assertEqual(expected.data, response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
     def test_get_traveler(self):
         """Get Traveler Test"""
-        # Grab a traveler object from the database
         traveler = Traveler.objects.first()
 
         url = f'/traveler/{traveler.id}'

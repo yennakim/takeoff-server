@@ -4,19 +4,17 @@ from rest_framework.authtoken.models import Token
 from takeoffapi.models import User, BoardingPass, Trip
 from takeoffapi.views.boarding_pass import BoardingPassSerializer
 
+
 class BoardingPassTests(APITestCase):
-    # Add any fixtures you want to run to build the test database
     fixtures = ['trip', 'boarding_pass', 'user']
 
     def setUp(self):
-        # Grab the first BoardingPass object from the database
         self.boarding_pass = BoardingPass.objects.first()
 
     def test_create_boarding_pass(self):
         """Create boarding pass test"""
         url = "/boarding_pass"
 
-        # Define the Boarding Pass properties
         boarding_pass = {
             "trip_id": 1,
             "departing_from": "BNA",
@@ -31,18 +29,14 @@ class BoardingPassTests(APITestCase):
 
         response = self.client.post(url, boarding_pass, format='json')
 
-        # Get the last boarding pass added to the database, it should be the one just created
         new_boarding_pass = BoardingPass.objects.last()
 
-        # Since the create method should return the serialized version of the newly created boarding pass
         expected = BoardingPassSerializer(new_boarding_pass)
 
-        # Assert that the expected output matches what was actually returned
         self.assertEqual(expected.data, response.data)
 
     def test_get_boarding_pass(self):
         """Get boarding pass test"""
-        # Grab a boarding pass object from the database
         boarding_pass = BoardingPass.objects.first()
 
         url = f'/boarding_pass/{boarding_pass.id}'
@@ -51,10 +45,8 @@ class BoardingPassTests(APITestCase):
 
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-        # Run the boarding pass through the serializer that's being used in the view
         expected = BoardingPassSerializer(boarding_pass)
 
-        # Assert that the response matches the expected return data
         self.assertEqual(expected.data, response.data)
 
     def test_list_boarding_passes(self):
@@ -63,7 +55,6 @@ class BoardingPassTests(APITestCase):
 
         response = self.client.get(url)
 
-        # Get all the boarding passes in the database and serialize them to get the expected output
         all_boarding_passes = BoardingPass.objects.all()
         expected = BoardingPassSerializer(all_boarding_passes, many=True)
 
@@ -72,7 +63,6 @@ class BoardingPassTests(APITestCase):
 
     def test_update_boarding_pass(self):
         """Test update boarding pass"""
-        # Grab the first boarding pass in the database
         boarding_pass = BoardingPass.objects.first()
 
         url = f'/boarding_pass/{boarding_pass.id}'
@@ -93,11 +83,10 @@ class BoardingPassTests(APITestCase):
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
-        # Refresh the boarding pass object to reflect any changes in the database
         boarding_pass.refresh_from_db()
 
-        # Assert that the updated value matches
-        self.assertEqual(updated_boarding_pass['departing_from'], boarding_pass.departing_from)
+        self.assertEqual(
+            updated_boarding_pass['departing_from'], boarding_pass.departing_from)
         self.assertEqual(updated_boarding_pass['seat'], boarding_pass.seat)
 
     def test_delete_boarding_pass(self):
@@ -109,6 +98,5 @@ class BoardingPassTests(APITestCase):
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
-        # Test that it was deleted by trying to get the boarding pass
         response = self.client.get(url)
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)

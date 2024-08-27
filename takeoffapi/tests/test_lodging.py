@@ -4,11 +4,11 @@ from rest_framework.authtoken.models import Token
 from takeoffapi.models import Lodging, Trip
 from takeoffapi.views.lodging import LodgingSerializer
 
+
 class LodgingTests(APITestCase):
-    fixtures = ['user','trip', 'lodging']
+    fixtures = ['user', 'trip', 'lodging']
 
     def setUp(self):
-        # Grab the first Trip object from the database
         self.trip = Trip.objects.first()
 
     def test_create_lodging(self):
@@ -50,7 +50,7 @@ class LodgingTests(APITestCase):
         url = '/lodging'
 
         response = self.client.get(url)
-        
+
         all_lodgings = Lodging.objects.all()
         expected = LodgingSerializer(all_lodgings, many=True)
 
@@ -77,7 +77,8 @@ class LodgingTests(APITestCase):
         lodging.refresh_from_db()
 
         self.assertEqual(updated_lodging['address'], lodging.address)
-        self.assertEqual(updated_lodging['length_of_stay'], lodging.length_of_stay)
+        self.assertEqual(
+            updated_lodging['length_of_stay'], lodging.length_of_stay)
 
     def test_delete_lodging(self):
         """Test delete lodging"""

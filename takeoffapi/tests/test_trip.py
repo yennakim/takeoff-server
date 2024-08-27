@@ -4,9 +4,11 @@ from rest_framework.authtoken.models import Token
 from takeoffapi.models import Trip, User
 from takeoffapi.views import TripSerializer
 
+
 class TripTests(APITestCase):
 
-    fixtures = ['user', 'trip', 'boarding_pass', 'lodging', 'packed_item', 'traveler', 'trip_traveler']
+    fixtures = ['user', 'trip', 'boarding_pass', 'lodging',
+                'packed_item', 'traveler', 'trip_traveler']
 
     def setUp(self):
         # Grab the first User object from the database
@@ -34,7 +36,7 @@ class TripTests(APITestCase):
 
         self.assertEqual(expected.data, response.data)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
-        
+
     def test_get_trip(self):
         """Get trip test"""
         trip = Trip.objects.first()

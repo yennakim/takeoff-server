@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
-from takeoffapi.models import User, Trip, PackedItem
+from takeoffapi.models import Trip, PackedItem
 from takeoffapi.views.packed_item import ItemSerializer
 
 
@@ -51,7 +51,6 @@ class PackedItemTests(APITestCase):
 
         response = self.client.get(url)
 
-        # Get all the packed items in the database and serialize them to get the expected output
         all_packed_items = PackedItem.objects.all()
         expected = ItemSerializer(all_packed_items, many=True)
 
@@ -60,7 +59,6 @@ class PackedItemTests(APITestCase):
 
     def test_update_packed_item(self):
         """Test update PackedItem"""
-        # Grab the first packed item in the database
         packed_item = PackedItem.objects.first()
 
         url = f'/items/{packed_item.id}'
@@ -75,10 +73,8 @@ class PackedItemTests(APITestCase):
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
-        # Refresh the packed item object to reflect any changes in the database
         packed_item.refresh_from_db()
 
-        # Assert that the updated value matches
         self.assertEqual(
             updated_packed_item['item_name'], packed_item.item_name)
         self.assertEqual(updated_packed_item['quantity'], packed_item.quantity)
@@ -92,7 +88,5 @@ class PackedItemTests(APITestCase):
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
-        # Test that it was deleted by trying to _get_ the packed item
-        # The response should return a 404
         response = self.client.get(url)
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
