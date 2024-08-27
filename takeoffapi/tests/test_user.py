@@ -10,14 +10,12 @@ class UserTests(APITestCase):
   fixtures = ['user']
 
   def setUp(self):
-      # Create a sample User for testing
       self.user = User.objects.first()
 
   def test_create_user(self):
       """Create user test"""
       url = "/user"
 
-      # Define the User properties
       user= {
           "first_name": "Tres",
           "last_name": "Leches",
@@ -27,14 +25,12 @@ class UserTests(APITestCase):
       }
 
       response = self.client.post(url, user, format='json')
-      # Get the last user added to the database, it should be the one just created
       new_user = User.objects.last()
 
-      # Use the serializer to serialize the "new_user"
       expected = UserSerializer(new_user)
 
-      # Assert that the expected output matches the actual response
       self.assertEqual(expected.data, response.data)
+      self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
   def test_get_user(self):
       """Get user test"""
@@ -44,10 +40,8 @@ class UserTests(APITestCase):
 
       self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-      # Run the user through the serializer that's being used in view
       expected = UserSerializer(self.user)
 
-      # Assert that the response matches the expected return data
       self.assertEqual(expected.data, response.data)
 
   def test_list_users(self):
@@ -56,7 +50,6 @@ class UserTests(APITestCase):
 
         response = self.client.get(url)
         
-        # Get all the users in the database and serialize them to get the expected output
         all_users = User.objects.all()
         expected = UserSerializer(all_users, many=True)
 

@@ -39,7 +39,7 @@ class BoardingPassView(ViewSet):
       flight_number = request.data["flight_number"],
     )
     serializer = BoardingPassSerializer(boarding_pass)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
   def update(self, request, pk):
     boarding_pass = BoardingPass.objects.get(pk=pk)

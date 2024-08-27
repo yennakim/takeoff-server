@@ -33,8 +33,8 @@ class PackedItemView(ViewSet):
       quantity = request.data["quantity"],
     )
     serializer = ItemSerializer(packed_item)
-    return Response(serializer.data)
-
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+  
   def update(self, request, pk):
     packed_item = PackedItem.objects.get(pk=pk)
     trip = Trip.objects.get(pk=request.data["trip_id"])

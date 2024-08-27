@@ -33,7 +33,7 @@ class UserView(ViewSet):
       uid = request.data["uid"],
     )
     serializer = UserSerializer(user)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
   
   def update(self, request, pk):
     user = User.objects.get(pk=pk)

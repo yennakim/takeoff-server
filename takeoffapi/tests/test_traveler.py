@@ -28,7 +28,7 @@ class TravelerTests(APITestCase):
         expected = TravelerSerializer(new_traveler)
 
         self.assertEqual(expected.data, response.data)
-
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
     def test_get_traveler(self):
         """Get Traveler Test"""
         # Grab a traveler object from the database

@@ -28,13 +28,13 @@ class TripTests(APITestCase):
 
         response = self.client.post(url, trip, format='json')
 
-        # Get the last trip added to the database
         new_trip = Trip.objects.last()
 
         expected = TripSerializer(new_trip)
 
         self.assertEqual(expected.data, response.data)
-
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        
     def test_get_trip(self):
         """Get trip test"""
         trip = Trip.objects.first()

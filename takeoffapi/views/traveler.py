@@ -31,7 +31,7 @@ class TravelerView(ViewSet):
       image = request.data["image"],
     )
     serializer = TravelerSerializer(traveler)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
   def update(self, request, pk):
     traveler = Traveler.objects.get(pk=pk)

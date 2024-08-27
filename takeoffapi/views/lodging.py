@@ -33,7 +33,7 @@ class LodgingView(ViewSet):
       length_of_stay = request.data["length_of_stay"],
     )
     serializer = LodgingSerializer(lodging)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
   def update(self, request, pk):
     lodging = Lodging.objects.get(pk=pk)

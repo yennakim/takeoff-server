@@ -37,7 +37,7 @@ class TripView(ViewSet):
       end_date = request.data["end_date"],
     )
     serializer = TripSerializer(trip)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
    
   def update(self, request, pk):
     trip = Trip.objects.get(pk=pk)
