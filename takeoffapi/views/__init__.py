@@ -1,7 +1,7 @@
-from .user import UserView
-from .trip import TripView
-from .lodging import LodgingView
-from .packed_item import PackedItemView
-from .boarding_pass import BoardingPassView
-from .traveler import TravelerView
-from .trip_traveler import TripTravelerView
+from .user import UserView, UserSerializer
+from .trip import TripView, TripSerializer
+from .lodging import LodgingView, LodgingSerializer
+from .packed_item import PackedItemView,ItemSerializer
+from .boarding_pass import BoardingPassView, BoardingPassSerializer
+from .traveler import TravelerView, TravelerSerializer
+from .trip_traveler import TripTravelerView, TripTravelerSerializer
