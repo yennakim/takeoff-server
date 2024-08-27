@@ -1,0 +1,102 @@
+from rest_framework import status
+from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
+from takeoffapi.models import User, BoardingPass, Trip
+from takeoffapi.views.boarding_pass import BoardingPassSerializer
+
+
+class BoardingPassTests(APITestCase):
+    fixtures = ['trip', 'boarding_pass', 'user']
+
+    def setUp(self):
+        self.boarding_pass = BoardingPass.objects.first()
+
+    def test_create_boarding_pass(self):
+        """Create boarding pass test"""
+        url = "/boarding_pass"
+
+        boarding_pass = {
+            "trip_id": 1,
+            "departing_from": "BNA",
+            "arriving_to": "LHR",
+            "airline": "British Airways",
+            "gate": "17",
+            "seat": "25E",
+            "departure_time": "13:00",
+            "arrival_time": "19:00",
+            "flight_number": "MS822"
+        }
+
+        response = self.client.post(url, boarding_pass, format='json')
+
+        new_boarding_pass = BoardingPass.objects.last()
+
+        expected = BoardingPassSerializer(new_boarding_pass)
+
+        self.assertEqual(expected.data, response.data)
+
+    def test_get_boarding_pass(self):
+        """Get boarding pass test"""
+        boarding_pass = BoardingPass.objects.first()
+
+        url = f'/boarding_pass/{boarding_pass.id}'
+
+        response = self.client.get(url)
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+        expected = BoardingPassSerializer(boarding_pass)
+
+        self.assertEqual(expected.data, response.data)
+
+    def test_list_boarding_passes(self):
+        """Test list boarding passes"""
+        url = '/boarding_pass'
+
+        response = self.client.get(url)
+
+        all_boarding_passes = BoardingPass.objects.all()
+        expected = BoardingPassSerializer(all_boarding_passes, many=True)
+
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(expected.data, response.data)
+
+    def test_update_boarding_pass(self):
+        """Test update boarding pass"""
+        boarding_pass = BoardingPass.objects.first()
+
+        url = f'/boarding_pass/{boarding_pass.id}'
+
+        updated_boarding_pass = {
+            "trip_id": boarding_pass.trip.id,
+            "departing_from": "ATL",
+            "arriving_to": "JFK",
+            "airline": boarding_pass.airline,
+            "gate": boarding_pass.gate,
+            "seat": "18B",
+            "departure_time": "15:00",
+            "arrival_time": "17:00",
+            "flight_number": "AA1234"
+        }
+
+        response = self.client.put(url, updated_boarding_pass, format='json')
+
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+
+        boarding_pass.refresh_from_db()
+
+        self.assertEqual(
+            updated_boarding_pass['departing_from'], boarding_pass.departing_from)
+        self.assertEqual(updated_boarding_pass['seat'], boarding_pass.seat)
+
+    def test_delete_boarding_pass(self):
+        """Test delete boarding pass"""
+        boarding_pass = BoardingPass.objects.first()
+
+        url = f'/boarding_pass/{boarding_pass.id}'
+        response = self.client.delete(url)
+
+        self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
+
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
