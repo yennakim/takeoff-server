@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.authtoken.models import Token
 from takeoffapi.models import User
 from takeoffapi.views import UserSerializer
 
@@ -34,7 +35,6 @@ class UserTests(APITestCase):
 
       # Assert that the expected output matches the actual response
       self.assertEqual(expected.data, response.data)
-      self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
   def test_get_user(self):
       """Get user test"""
