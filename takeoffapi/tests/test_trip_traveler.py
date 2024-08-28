@@ -71,13 +71,14 @@ class TripTravelerTests(APITestCase):
         trip = trip_traveler.trip
         traveler = trip_traveler.traveler
 
-        url = f'/trip/{trip.id}/remove_traveler'
+        url = f'/trip/remove_traveler'
 
         data = {
+            "trip_id": trip.id,
             "traveler_id": traveler.id
         }
 
-        response = self.client.delete(url, data, format='json')
+        response = self.client.post(url, data, format='json')
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
