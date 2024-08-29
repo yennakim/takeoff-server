@@ -67,20 +67,61 @@ class TripTravelerTests(APITestCase):
 
     def test_remove_traveler(self):
         """Test remove traveler from trip"""
-        trip_traveler = TripTraveler.objects.first()
-        trip = trip_traveler.trip
-        traveler = trip_traveler.traveler
+        trip = Trip.objects.first()
+        traveler = Traveler.objects.first()
+        TripTraveler.objects.create(trip=trip, traveler=traveler)
 
-        url = f'/trip/{trip.id}/remove_traveler'
+        url = f'/trip/remove_traveler'
 
         data = {
+            "trip_id": trip.id,
             "traveler_id": traveler.id
         }
 
-        response = self.client.delete(url, data, format='json')
+        response = self.client.post(url, data, format='json')
 
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
 
         # Check if the TripTraveler object was deleted
         self.assertFalse(TripTraveler.objects.filter(
             trip=trip, traveler=traveler).exists())
+
+    def test_remove_nonexistent_traveler(self):
+        """Test removing a traveler that doesn't exist in the trip"""
+        trip = Trip.objects.first()
+        traveler = Traveler.objects.create(first_name="Test", last_name="User")
+
+        url = '/trip/remove_traveler/'
+        data = {
+            "trip_id": trip.id,
+            "traveler_id": traveler.id
+        }
+
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_display_travelers(self):
+        """Test display travelers for a trip"""
+        trip = Trip.objects.first()
+        url = f'/trip/{trip.id}/display_travelers'
+
+        response = self.client.post(url, data={}, format='json')
+        trip_travelers = TripTraveler.objects.filter(trip=trip)
+
+        expected_data = []
+        for trip_traveler in trip_travelers:
+            traveler_data = {
+                'id': trip_traveler.id,  # Keep this for TripTraveler object
+                'trip_id': trip_traveler.trip.id,  # Keep this for TripTraveler object
+                'traveler': {
+                    'id': trip_traveler.traveler.id,
+                    'first_name': trip_traveler.traveler.first_name,
+                    'last_name': trip_traveler.traveler.last_name,
+                    'image': trip_traveler.traveler.image,
+                }
+            }
+            expected_data.append(traveler_data)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)

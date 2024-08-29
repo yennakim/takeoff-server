@@ -7,11 +7,28 @@ from takeoffapi.models import Trip, User, Traveler, TripTraveler
 
 
 class TripSerializer(serializers.ModelSerializer):
+    """JSON serializer for trips"""
     class Meta:
         model = Trip
         fields = ('id', 'user_id', 'trip_name', 'origin',
                   'destination', 'start_date', 'end_date')
-        depth = 2
+        depth = 1
+
+
+class TravelerSerializer(serializers.ModelSerializer):
+    """Serializer for Traveler model"""
+    class Meta:
+        model = Traveler
+        fields = ('id', 'first_name', 'last_name', 'image')
+
+
+class TripTravelerSerializer(serializers.ModelSerializer):
+    """JSON serialier for trip travelers"""
+    traveler = TravelerSerializer(read_only=True)
+
+    class Meta:
+        model = TripTraveler
+        fields = ('id', 'trip_id', 'traveler')
 
 
 class TripView(ViewSet):
@@ -62,22 +79,36 @@ class TripView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=True)
-    def add_traveler(self, request, pk):
-        trip = Trip.objects.get(pk=pk)
-        traveler = Traveler.objects.get(pk=pk)
+    def add_traveler(self, request, pk=None):
+        trip = Trip.objects.get(id=request.data["trip_id"])
+        traveler = Traveler.objects.get(pk=request.data["traveler_id"])
         trip_traveler = TripTraveler.objects.create(
             trip=trip,
             traveler=traveler
         )
+        serializer = TripTravelerSerializer(trip_traveler)
+        return Response({'traveler': serializer.data, 'message': 'Traveler added to trip'}, status=status.HTTP_201_CREATED)
 
-        return Response({'message': 'Traveler added to trip'}, status=status.HTTP_201_CREATED)
+    @action(methods=['post'], detail=False)
+    def remove_traveler(self, request, pk=None):
+        try:
+            trip = Trip.objects.get(id=request.data["trip_id"])
+            traveler = Traveler.objects.get(pk=request.data["traveler_id"])
+            trip_traveler = TripTraveler.objects.filter(
+                trip_id=trip.id, traveler_id=traveler.id)
+            trip_traveler.delete()
+            return Response({"message": "Traveler removed from trip"}, status=status.HTTP_204_NO_CONTENT)
+        except TripTraveler.DoesNotExist as ex:
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=['delete'], detail=True)
-    def remove_traveler(self, request, pk):
-        trip = Trip.objects.get(pk=pk)
-        traveler = Traveler.objects.get(pk=pk)
-        trip_traveler = TripTraveler.objects.filter(
-            trip_id=trip.id, traveler_id=traveler.id)
-        trip_traveler.delete()
-
-        return Response({'message': 'Traveler removed'}, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['post'], detail=True)
+    def display_travelers(self, request, pk=None):
+        try:
+            trip = Trip.objects.get(pk=pk)
+            trip_travelers = TripTraveler.objects.filter(
+                trip=trip)
+            trip_traveler_serializer = TripTravelerSerializer(
+                trip_travelers, many=True)
+            return Response(trip_traveler_serializer.data, status=status.HTTP_200_OK)
+        except Trip.DoesNotExist:
+            return Response({"message": "Trip not found"}, status=status.HTTP_404_NOT_FOUND)
