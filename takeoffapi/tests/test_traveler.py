@@ -57,7 +57,7 @@ class TravelerTests(APITestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(expected.data, response.data)
 
-    def test_change_traveler(self):
+    def test_update_traveler(self):
         """Test update traveler"""
         traveler = Traveler.objects.first()
 

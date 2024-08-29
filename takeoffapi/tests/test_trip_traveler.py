@@ -85,3 +85,20 @@ class TripTravelerTests(APITestCase):
         # Check if the TripTraveler object was deleted
         self.assertFalse(TripTraveler.objects.filter(
             trip=trip, traveler=traveler).exists())
+
+    def test_display_travelers(self):
+        """Test display travelers for a trip"""
+        trip = Trip.objects.first()
+        url = f'/trip/{trip.id}/display_travelers'
+
+        request_data = {
+            "trip_id": trip.id
+        }
+
+        response = self.client.post(url, data=request_data, format='json')
+        trip_travelers = TripTraveler.objects.filter(trip=trip)
+
+        expected_data = TripTravelerSerializer(trip_travelers, many=True).data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)

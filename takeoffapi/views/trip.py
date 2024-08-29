@@ -13,15 +13,15 @@ class TripSerializer(serializers.ModelSerializer):
         fields = ('id', 'user_id', 'trip_name', 'origin',
                   'destination', 'start_date', 'end_date')
         depth = 1
-        
+
+
 class TripTravelerSerializer(serializers.ModelSerializer):
     """JSON serialier for trip travelers"""
-    
+
     class Meta:
         model = TripTraveler
-        fields = '__all__'
-        depth = 2
-    
+        fields = ('id', 'trip_id', 'traveler_id')
+        depth = 1
 
 
 class TripView(ViewSet):
@@ -88,19 +88,22 @@ class TripView(ViewSet):
             trip = Trip.objects.get(id=request.data["trip_id"])
             traveler = Traveler.objects.get(pk=request.data["traveler_id"])
             trip_traveler = TripTraveler.objects.filter(
-            trip_id=trip.id, traveler_id=traveler.id)
+                trip_id=trip.id, traveler_id=traveler.id)
             trip_traveler.delete()
             serializer = TripTravelerSerializer(trip_traveler)
             return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
         except TripTraveler.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-        
 
     @action(methods=['post'], detail=True)
     def display_travelers(self, request, pk=None):
-        trip = Trip.objects.get(id=request.data["trip_id"])
-        trip_traveler = TripTraveler.objects.filter(
-        trip=trip)
-        trip_traveler_serializer = TripTravelerSerializer(trip_traveler, many=True)
-        
-        return Response(trip_traveler_serializer.data, status=status.HTTP_200_OK)
+        try:
+            trip = Trip.objects.get(id=request.data["trip_id"])
+            trip_traveler = TripTraveler.objects.filter(
+                trip=trip)
+            trip_traveler_serializer = TripTravelerSerializer(
+                trip_traveler, many=True)
+
+            return Response(trip_traveler_serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Trip not found'}, status=status.HTTP_404_NOT_FOUND)
