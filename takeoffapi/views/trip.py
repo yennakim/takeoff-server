@@ -15,13 +15,20 @@ class TripSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class TravelerSerializer(serializers.ModelSerializer):
+    """Serializer for Traveler model"""
+    class Meta:
+        model = Traveler
+        fields = ('id', 'first_name', 'last_name', 'image')
+
+
 class TripTravelerSerializer(serializers.ModelSerializer):
     """JSON serialier for trip travelers"""
+    traveler = TravelerSerializer(read_only=True)
 
     class Meta:
         model = TripTraveler
-        fields = ('id', 'trip_id', 'traveler_id')
-        depth = 1
+        fields = ('id', 'trip_id', 'traveler')
 
 
 class TripView(ViewSet):
@@ -90,20 +97,18 @@ class TripView(ViewSet):
             trip_traveler = TripTraveler.objects.filter(
                 trip_id=trip.id, traveler_id=traveler.id)
             trip_traveler.delete()
-            serializer = TripTravelerSerializer(trip_traveler)
-            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+            return Response({"message": "Traveler removed from trip"}, status=status.HTTP_204_NO_CONTENT)
         except TripTraveler.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': str(ex)}, status=status.HTTP_404_NOT_FOUND)
 
     @action(methods=['post'], detail=True)
     def display_travelers(self, request, pk=None):
         try:
-            trip = Trip.objects.get(id=request.data["trip_id"])
-            trip_traveler = TripTraveler.objects.filter(
+            trip = Trip.objects.get(pk=pk)
+            trip_travelers = TripTraveler.objects.filter(
                 trip=trip)
             trip_traveler_serializer = TripTravelerSerializer(
-                trip_traveler, many=True)
-
+                trip_travelers, many=True)
             return Response(trip_traveler_serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response({'message': 'Trip not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Trip.DoesNotExist:
+            return Response({"message": "Trip not found"}, status=status.HTTP_404_NOT_FOUND)
