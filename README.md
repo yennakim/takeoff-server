@@ -74,7 +74,8 @@ Takeoff aims to solve these issues by providing a centralized platform for manag
 - Progamming Language: Python, Django
 - ERD: https://drawsql.app/teams/daun/diagrams/takeoff-mvp/
 - Project Board: https://github.com/users/yennakim/projects/13
-- Postman API documentation: https://documenter.getpostman.com/view/27458814/2sAXjKbYmn
+- Postman API documentation: https://documenter.getpostman.com/view/27458814/2sAXjNYBVB
+ - [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/27458814-ad98c03b-fe89-4594-893c-db5f70a04dc5?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D27458814-ad98c03b-fe89-4594-893c-db5f70a04dc5%26entityType%3Dcollection%26workspaceId%3Daa720716-7a8f-49d0-8ff8-492108fa1cb0)
 - Loom walkthrough: https://www.loom.com/share/b13a06c6bc614cb3ae3270f572596a9d
 
 ## Contributions
