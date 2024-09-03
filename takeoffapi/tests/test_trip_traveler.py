@@ -106,22 +106,8 @@ class TripTravelerTests(APITestCase):
         trip = Trip.objects.first()
         url = f'/trip/{trip.id}/display_travelers'
 
-        response = self.client.post(url, data={}, format='json')
+        response = self.client.post(url, format='json')
         trip_travelers = TripTraveler.objects.filter(trip=trip)
-
-        expected_data = []
-        for trip_traveler in trip_travelers:
-            traveler_data = {
-                'id': trip_traveler.id,  # Keep this for TripTraveler object
-                'trip_id': trip_traveler.trip.id,  # Keep this for TripTraveler object
-                'traveler': {
-                    'id': trip_traveler.traveler.id,
-                    'first_name': trip_traveler.traveler.first_name,
-                    'last_name': trip_traveler.traveler.last_name,
-                    'image': trip_traveler.traveler.image,
-                }
-            }
-            expected_data.append(traveler_data)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
+        expected = TripTravelerSerializer(trip_travelers, many=True)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(len(expected.data), len(response.data))

@@ -11,7 +11,7 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = ('id', 'user_id', 'trip_name', 'origin',
-                  'destination', 'start_date', 'end_date')
+                  'destination', 'start_date', 'end_date', 'travelers')
         depth = 1
 
 
@@ -24,11 +24,11 @@ class TravelerSerializer(serializers.ModelSerializer):
 
 class TripTravelerSerializer(serializers.ModelSerializer):
     """JSON serialier for trip travelers"""
-    traveler = TravelerSerializer(read_only=True)
 
     class Meta:
         model = TripTraveler
-        fields = ('id', 'trip_id', 'traveler')
+        fields = ('id', 'trip_id')
+        depth = 2
 
 
 class TripView(ViewSet):
