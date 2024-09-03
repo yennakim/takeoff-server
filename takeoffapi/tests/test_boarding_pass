@@ -1,22 +1,26 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
-from takeoffapi.models import User, BoardingPass, Trip
+from takeoffapi.models import User, BoardingPass, Trip, Traveler
 from takeoffapi.views.boarding_pass import BoardingPassSerializer
 
 
 class BoardingPassTests(APITestCase):
-    fixtures = ['trip', 'boarding_pass', 'user']
+    fixtures = ['user', 'trip', 'boarding_pass', 'traveler']
 
     def setUp(self):
         self.boarding_pass = BoardingPass.objects.first()
-
+        self.trip = Trip.objects.first()
+        self.traveler = Traveler.objects.first()
+        
     def test_create_boarding_pass(self):
         """Create boarding pass test"""
         url = "/boarding_pass"
 
         boarding_pass = {
-            "trip_id": 1,
+            "user_id": self.user.id,
+            "trip_id": self.trip.id,
+            "traveler_id": self.traveler.id,
             "departing_from": "BNA",
             "arriving_to": "LHR",
             "airline": "British Airways",
@@ -69,14 +73,16 @@ class BoardingPassTests(APITestCase):
 
         updated_boarding_pass = {
             "trip_id": boarding_pass.trip.id,
-            "departing_from": "ATL",
-            "arriving_to": "JFK",
+            "user_id": boarding_pass.user.id,
+            "traveler_id": boarding_pass.traveler.id,
+            "departing_from": boarding_pass.departing_from,
+            "arriving_to": boarding_pass.arriving_to,
             "airline": boarding_pass.airline,
             "gate": boarding_pass.gate,
-            "seat": "18B",
-            "departure_time": "15:00",
-            "arrival_time": "17:00",
-            "flight_number": "AA1234"
+            "seat": boarding_pass.seat,
+            "departure_time": boarding_pass.departure_time,
+            "arrival_time": boarding_pass.arrival_time,
+            "flight_number": boarding_pass.flight_number
         }
 
         response = self.client.put(url, updated_boarding_pass, format='json')

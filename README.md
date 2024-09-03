@@ -1,5 +1,5 @@
 # Takeoff
-Takeoff is a Django-based backend project designed to simplify travel planning and organization. It helps travelers keep track of essential information such as flight times, packing lists, and travel documents.
+Takeoff is a Django-based backend project designed to simplify travel planning and organization. It helps users keep track of essential information such as trips,boarding passes, packing lists, and lodging.
 
 ## Problem Statement
 When traveling to various destinations, there's a lot to keep track of:
@@ -72,4 +72,10 @@ Takeoff aims to solve these issues by providing a centralized platform for manag
 ## Technical Details
 
 - Progamming Language: Python, Django
-- ERD: https://drawsql.app/teams/daun/diagrams/takeoff-mvp/embed
+- ERD: https://drawsql.app/teams/daun/diagrams/takeoff-mvp/
+- Project Board: https://github.com/users/yennakim/projects/13
+- Postman API documentation: https://documenter.getpostman.com/view/27458814/2sAXjKbYmn
+- Loom walkthrough: https://www.loom.com/share/b13a06c6bc614cb3ae3270f572596a9d
+
+## Contributions
+Daun Kim

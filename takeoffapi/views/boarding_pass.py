@@ -2,13 +2,13 @@ from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from takeoffapi.models import BoardingPass, Trip
+from takeoffapi.models import BoardingPass, Trip, User, Traveler
 
 
 class BoardingPassSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoardingPass
-        fields = ('id', 'trip_id', 'departing_from', 'arriving_to', 'airline',
+        fields = ('id', 'trip_id', 'user_id', 'traveler_id', 'departing_from', 'arriving_to', 'airline',
                   'gate', 'seat', 'departure_time', 'arrival_time', 'flight_number')
         depth = 1
 
@@ -28,9 +28,12 @@ class BoardingPassView(ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        trip = Trip.objects.get(pk=request.data["trip_id"])
-
+        user = User.objects.get(pk=request.data["user_id"])
+        traveler = Traveler.objects.get(id=request.data["traveler_id"])
+        trip = Trip.objects.get(id=request.data["trip_id"])
         boarding_pass = BoardingPass.objects.create(
+            user=user,
+            traveler=traveler,
             trip=trip,
             departing_from=request.data["departing_from"],
             arriving_to=request.data["arriving_to"],
@@ -46,7 +49,11 @@ class BoardingPassView(ViewSet):
 
     def update(self, request, pk):
         boarding_pass = BoardingPass.objects.get(pk=pk)
-        trip = Trip.objects.get(pk=request.data["trip_id"])
+        user = User.objects.get(id=request.data["user_id"])
+        traveler = Traveler.objects.get(id=request.data["traveler_id"])
+        trip = Trip.objects.get(id=request.data["trip_id"])
+        boarding_pass.user = user
+        boarding_pass.traveler = traveler
         boarding_pass.trip = trip
         boarding_pass.departing_from = request.data["departing_from"]
         boarding_pass.arriving_to = request.data["arriving_to"]

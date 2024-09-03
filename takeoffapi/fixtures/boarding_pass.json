@@ -3,6 +3,8 @@
       "model": "takeoffapi.boardingpass",
       "fields": {
         "trip_id": 1,
+        "user_id": 1,
+        "traveler_id": 1,
         "departing_from": "BNA",
         "arriving_to": "LHR",
         "airline": "British Airways",
@@ -17,6 +19,8 @@
     "model": "takeoffapi.boardingpass",
     "fields": {
       "trip_id": 2,
+      "user_id": 1,
+      "traveler_id": 2,
       "departing_from": "BNA",
         "arriving_to": "USH",
         "airline": "LATAM",
