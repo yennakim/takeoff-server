@@ -1,7 +1,7 @@
 from django.conf.urls import include
 from django.urls import path
 from rest_framework import routers
-from takeoffapi.views import UserView, TripView, LodgingView, PackedItemView, BoardingPassView, TravelerView, TripTravelerView
+from takeoffapi.views import UserView, TripView, LodgingView, PackedItemView, BoardingPassView, TravelerView, TripTravelerView, check_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'user', UserView, 'user')
@@ -14,5 +14,7 @@ router.register(r'trip_traveler', TripTravelerView, 'trip_traveler')
 
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('register', register_user),
+    path('checkuser', check_user, name='check_user'),
 ]
