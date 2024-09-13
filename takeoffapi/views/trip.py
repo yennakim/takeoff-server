@@ -41,9 +41,19 @@ class TripView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
-        trips = Trip.objects.all()
+        uid = request.query_params.get('uid', None)
+        if uid is not None:
+            try:
+                user = User.objects.get(uid=uid)
+                trips = Trip.objects.filter(user=user)
+            except User.DoesNotExist:
+                return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            trips = Trip.objects.all()
+            
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data)
+    
 
     def create(self, request):
         user = User.objects.get(id=request.data["user_id"])

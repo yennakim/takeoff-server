@@ -22,7 +22,15 @@ class LodgingView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
-        lodgings = Lodging.objects.all()
+        trip_id = request.query_params.get('trip_id', None)
+        if trip_id is not None:
+            try:
+                trip = Trip.objects.get(id=trip_id)
+                lodgings = Lodging.objects.filter(trip=trip)
+            except Trip.DoesNotExist:
+                return Response({'message': 'Trip not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            lodgings = Lodging.objects.all()
         serializer = LodgingSerializer(lodgings, many=True)
         return Response(serializer.data)
 
