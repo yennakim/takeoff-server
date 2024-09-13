@@ -23,9 +23,18 @@ class BoardingPassView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
-        boarding_passes = BoardingPass.objects.all()
+        trip_id = request.query_params.get('trip_id', None)
+        if trip_id is not None:
+            try:
+                trip = Trip.objects.get(id=trip_id)
+                boarding_passes = BoardingPass.objects.filter(trip=trip)
+            except Trip.DoesNotExist:
+                return Response({'message': 'Boarding pass not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            boarding_passes = BoardingPass.objects.all()
         serializer = BoardingPassSerializer(boarding_passes, many=True)
         return Response(serializer.data)
+       
 
     def create(self, request):
         user = User.objects.get(pk=request.data["user_id"])
