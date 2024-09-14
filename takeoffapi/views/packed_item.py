@@ -8,7 +8,7 @@ from takeoffapi.models import PackedItem, Trip
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = PackedItem
-        fields = ('id', 'trip_id', 'item_name', 'quantity')
+        fields = ('id', 'trip_id', 'item_name', 'quantity', 'packed')
         depth = 1
 
 
@@ -41,6 +41,7 @@ class PackedItemView(ViewSet):
             trip=trip,
             item_name=request.data["item_name"],
             quantity=request.data["quantity"],
+            packed=request.data["packed"],
         )
         serializer = ItemSerializer(packed_item)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -51,6 +52,7 @@ class PackedItemView(ViewSet):
         packed_item.trip = trip
         packed_item.item_name = request.data["item_name"]
         packed_item.quantity = request.data["quantity"]
+        packed_item.packed = request.data["packed"]
         packed_item.save()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
