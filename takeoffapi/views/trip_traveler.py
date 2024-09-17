@@ -8,8 +8,8 @@ from takeoffapi.models import TripTraveler, Trip, Traveler
 class TripTravelerSerializer(serializers.ModelSerializer):
     class Meta:
         model = TripTraveler
-        fields = ('id', 'trip_id', 'traveler_id')
-        depth = 1
+        fields = ('id', 'trip', 'traveler')
+        depth = 2
 
 
 class TripTravelerView(ViewSet):
